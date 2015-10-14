@@ -1,0 +1,31 @@
+Simple Firefox Plugin Base
+==========================
+
+This is a repository which contains helper classes and utilities for bundling
+directly with a Firefox plugin.
+
+
+Classes
+-------
+
+The following classes are provided, for more information see the source files
+directly, they are documented.
+
+### CSSBuilder
+
+A simple utility which allows to build CSS styles in an object/function
+oriented manner.
+
+### DynamicStyleSheets
+
+A helper class which allows to register and removed stylesheets.
+
+### Preferences
+
+A wrapper around the Preferences service provided by Firefox which provides
+many methods.
+
+### ResourceAlias
+
+A utility which allows to load resources.
+
