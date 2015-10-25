@@ -17,10 +17,10 @@ Components.utils.import("resource://gre/modules/Services.jsm");
  */
 var DynamicStyleSheets = function() {
 	/** The stylesheet service provided by Firefox. */
-	this.service : null,
+	this.service = null,
 	
 	 /** The list of stylesheets that are registered. */
-	this.styleSheets : {},
+	this.styleSheets = {},
 	
 	/**
 	 * Initializes the DynamicStyleSheets class.
