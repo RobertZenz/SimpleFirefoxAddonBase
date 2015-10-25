@@ -13,7 +13,7 @@ var EXPORTED_SYMBOLS = [ "ResourceAlias" ];
 
 Components.utils.import("resource://gre/modules/Services.jsm");
 
-var ResourceAlias = function() {
+var ResourceAlias = {
 	resourceProtocolHandler : null,
 	
 	register : function(name, data) {
