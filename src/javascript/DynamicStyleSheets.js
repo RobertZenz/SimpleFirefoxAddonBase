@@ -68,7 +68,7 @@ var DynamicStyleSheets = function() {
 	 *               CSS string without the namespace header.
 	 */
 	this.registerForDomain = function(name, domain, style) {
-		var styleSheetContent = "@namespace url((http://www.w3.org/1999/xhtml);";
+		var styleSheetContent = "@namespace url(http://www.w3.org/1999/xhtml);";
 		styleSheetContent = styleSheetContent + "@-moz-document domain(" + domain + ") {";
 		styleSheetContent = styleSheetContent + style;
 		styleSheetContent = styleSheetContent + "}";
@@ -87,7 +87,7 @@ var DynamicStyleSheets = function() {
 	 *              CSS string without the namespace header.
 	 */
 	this.registerForGeneric = function(name, style, domains) {
-		var styleSheetContent = "@namespace url((http://www.w3.org/1999/xhtml);";
+		var styleSheetContent = "@namespace url(http://www.w3.org/1999/xhtml);";
 		styleSheetContent = styleSheetContent + style;
 		
 		this.register(name, styleSheetContent);
