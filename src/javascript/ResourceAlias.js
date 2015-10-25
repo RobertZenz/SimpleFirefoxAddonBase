@@ -44,7 +44,7 @@ var ResourceAlias = function() {
 		return true;
 	},
 	
-	unregister = function(name) {
+	unregister : function(name) {
 		if (!this.resourceProtocolHandler) {
 			return false;
 		}
