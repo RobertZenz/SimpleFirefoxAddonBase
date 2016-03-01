@@ -7,7 +7,7 @@
  * https://addons.mozilla.org/en-US/firefox/addon/small-tabs/
  */
 
-"use strict"
+"use strict";
 
 var EXPORTED_SYMBOLS = [ "ResourceAlias" ];
 
