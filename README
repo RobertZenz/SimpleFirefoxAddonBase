@@ -29,3 +29,8 @@ many methods.
 
 A utility which allows to load resources.
 
+### StyleSheet
+
+A helper class which works similar to DynamicStyleSheets, but allows to register
+multiple stylesheets as one big one.
+
