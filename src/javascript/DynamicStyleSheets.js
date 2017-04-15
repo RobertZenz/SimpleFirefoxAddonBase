@@ -5,7 +5,7 @@
  *
  */
 
-"use strict";
+"use strict"
 
 var EXPORTED_SYMBOLS = [ "DynamicStyleSheets" ];
 
@@ -17,10 +17,10 @@ Components.utils.import("resource://gre/modules/Services.jsm");
  */
 var DynamicStyleSheets = function() {
 	/** The stylesheet service provided by Firefox. */
-	this.service = null;
+	this.service = null,
 	
 	 /** The list of stylesheets that are registered. */
-	this.styleSheets = {};
+	this.styleSheets = {},
 	
 	/**
 	 * Initializes the DynamicStyleSheets class.
@@ -28,53 +28,69 @@ var DynamicStyleSheets = function() {
 	this.init = function() {
 		var component = Components.classes["@mozilla.org/content/style-sheet-service;1"];
 		this.service = component.getService(Components.interfaces.nsIStyleSheetService);
-	};
+	},
+	
+	/**
+	 * Converts the given style to a string, if needed.
+	 *
+	 * @param style The style to convert. Can be either a string or CSSBuilder.
+	 * @return The style as string.
+	 */
+	this.getCSS = function(style) {
+		if (typeof style === "string") {
+			return style;
+		} else if (typeof style.toCSS === "function") {
+			return style.toCSS();
+		} else {
+			throw "Cannot use \"" + typeof style + "\" as style.";
+		}	
+	},
 	
 	/**
 	 * Registers the given stylesheet with the given name.
 	 *
-	 * @param {string} name The name of the stylesheet. Needs to be unique.
-	 * @param {string} style The content of the stylesheet to register.
+	 * @param name The name of the stylesheet. Needs to be unique.
+	 * @param style The content of the stylesheet to register.
 	 */
 	this.register = function(name, style) {
 		this.registerPath(name, "data:text/css;base64," + btoa(style));
-	};
+	},
 	
 	/**
 	 * Registers the given stylesheet with the given name for the browser. <p/>
 	 * Means it will be prefixed with the mozilla namespace and the rule for the
 	 * browser.xul file.
 	 *
-	 * @param {string} name The name of the stylesheet. Needs to be unique.
-	 * @param {string} style The content of the stylesheet to register. This is
-	 *                       a plain CSS string without the namespace header.
+	 * @param name The name of the stylesheet. Needs to be unique.
+	 * @param style The content of the stylesheet to register. This is a plain
+	 *              CSS string without the namespace header.
 	 */
 	this.registerForBrowser = function(name, style) {
 		var styleSheetContent = "@namespace url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);";
 		styleSheetContent = styleSheetContent + "@-moz-document url(chrome://browser/content/browser.xul) {";
-		styleSheetContent = styleSheetContent + style;
+		styleSheetContent = styleSheetContent + this.getCSS(style);
 		styleSheetContent = styleSheetContent + "}";
 		
 		this.register(name, styleSheetContent);
-	};
+	},
 	
 	/**
 	 * Registers the given stylesheet with the given name for the given domain.
 	 * Means it will be prefixed with the default namespace and the rule
 	 * for the given domain.
 	 *
-	 * @param {string} name The name of the stylesheet. Needs to be unique.
-	 * @param {string} style The content of the stylesheet to register. This is
-	 *                       a plain CSS string without the namespace header.
+	 * @param name The name of the stylesheet. Needs to be unique.
+	 * @param style The content of the stylesheet to register. This is a plain
+	 *               CSS string without the namespace header.
 	 */
 	this.registerForDomain = function(name, domain, style) {
 		var styleSheetContent = "@namespace url(http://www.w3.org/1999/xhtml);";
 		styleSheetContent = styleSheetContent + "@-moz-document domain(" + domain + ") {";
-		styleSheetContent = styleSheetContent + style;
+		styleSheetContent = styleSheetContent + this.getCSS(style);
 		styleSheetContent = styleSheetContent + "}";
 		
 		this.register(name, styleSheetContent);
-	};
+	},
 	
 	/**
 	 * Registers the given stylesheet with the given name. Means it will be
@@ -82,22 +98,22 @@ var DynamicStyleSheets = function() {
 	 * a stylesheet with your own at-rules, this is the function you're looking
 	 * for.
 	 *
-	 * @param {string} name The name of the stylesheet. Needs to be unique.
-	 * @param {string} style The content of the stylesheet to register. This is
-	 *                       a plain CSS string without the namespace header.
+	 * @param name The name of the stylesheet. Needs to be unique.
+	 * @param style The content of the stylesheet to register. This is a plain
+	 *              CSS string without the namespace header.
 	 */
 	this.registerForGeneric = function(name, style, domains) {
 		var styleSheetContent = "@namespace url(http://www.w3.org/1999/xhtml);";
-		styleSheetContent = styleSheetContent + style;
+		styleSheetContent = styleSheetContent + this.getCSS(style);
 		
 		this.register(name, styleSheetContent);
-	};
+	},
 	
 	/**
 	 * Registers the given path.
 	 *
-	 * @param {string} name The name of the path.
-	 * @param {string} path The path to register. Is expected to be a valid URI.
+	 * @param name The name of the path.
+	 * @param path The path to register. Is expected to be a valid URI.
 	 */
 	this.registerPath = function(name, path) {
 		this.unregister(name)
@@ -109,12 +125,12 @@ var DynamicStyleSheets = function() {
 		if (!this.service.sheetRegistered(styleSheet, this.service.USER_SHEET)) {
 			this.service.loadAndRegisterSheet(styleSheet, this.service.USER_SHEET);
 		}
-	};
+	},
 	
 	/**
 	 * Removes the stylesheet or path with the given name.
 	 *
-	 * @param {string} name The name of the stylsheet or path to remove.
+	 * @param name The name of the stylsheet or path to remove.
 	 */
 	this.unregister = function(name) {
 		var styleSheet = this.styleSheets[name];
@@ -126,7 +142,7 @@ var DynamicStyleSheets = function() {
 		}
 		
 		this.styleSheets[name] = null;
-	};
+	},
 	
 	/**
 	 * Removes all registered stylesheets or paths.
@@ -135,6 +151,6 @@ var DynamicStyleSheets = function() {
 		for ( var name in this.styleSheets) {
 			this.unregister(name);
 		}
-	};
+	}
 };
 
